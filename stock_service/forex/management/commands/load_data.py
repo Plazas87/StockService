@@ -3,7 +3,7 @@ from typing import Dict, Any
 from django.conf import settings
 import requests
 from django.core.management.base import BaseCommand
-from ....forex.models import Order
+from ....forex.models import Order, Ticker
 
 
 class Command(BaseCommand):
@@ -39,6 +39,8 @@ class Command(BaseCommand):
     def _load_data(self, data: Dict[str, Any]) -> None:
         """Load data into the data base."""
         orders = []
+        ticker = Ticker.objects.create(ticker_name=data["symbol"])
+
         for data_key in settings.DATA_KEYS:
             for order in data[data_key]:
                 order = Order(
@@ -48,13 +50,9 @@ class Command(BaseCommand):
                     type=Order.OrderType.BID
                     if data_key == "bids"
                     else Order.OrderType.ASK,
+                    ticker=ticker,
                 )
-
                 orders.append(order)
 
         # Using a Bulk create operation to avoid multiple hits to the database.
         Order.objects.bulk_create(orders)
-
-        # Using stdout
-        # https://docs.djangoproject.com/en/4.0/howto/custom-management-commands/#module-django.core.management
-        self.stdout.write(self.style.SUCCESS('Successfully loaded "%s"'))

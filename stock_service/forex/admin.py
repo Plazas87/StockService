@@ -9,13 +9,13 @@ class OrderAdmin(admin.ModelAdmin):
     form = CustomOrderChangeForm
     model = Order
     ordering = ("type",)
-    list_display = ["px", "quantity", "type"]
+    list_display = ["ticker", "px", "quantity", "type"]
 
     def get_form(self, request, obj=None, **kwargs):
         """Use special form during Order creation."""
         defaults = {}
         if obj is None:
-            defaults['form'] = self.add_form
+            defaults["form"] = self.add_form
         defaults.update(kwargs)
         return super().get_form(request, obj, **defaults)
 
