@@ -12,7 +12,9 @@ class Order(models.Model):
     quantity = models.FloatField(blank=False, null=False)
     px = models.FloatField(blank=False, null=False)
     type = models.CharField(max_length=2, choices=OrderType.choices)
-    ticker = models.ForeignKey("Ticker", on_delete=models.CASCADE)
+    ticker = models.ForeignKey(
+        "Ticker", on_delete=models.CASCADE, related_name="orders"
+    )
 
     def __str__(self) -> str:
         """Nice string representation of the object."""
