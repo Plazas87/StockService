@@ -21,8 +21,8 @@ class Order(models.Model):
 
 class Ticker(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4)
-    ticker_name = models.CharField(max_length=40, blank=False)
+    name = models.CharField(max_length=40, blank=False)
 
     def __str__(self) -> str:
         """Nice string representation of the object."""
-        return f"{self.ticker_name}"
+        return f"{self.name}"
