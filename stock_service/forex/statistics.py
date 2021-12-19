@@ -1,9 +1,22 @@
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Dict, Any, Union
 import pandas as pd
 from stock_service.forex.models import Order
 
 if TYPE_CHECKING:
     from stock_service.forex.models import Ticker
+
+
+class Strategy(ABC):
+    @abstractmethod
+    def stats_report(self) -> Dict[str, Any]:
+        """Generate statistic report."""
+        pass
+
+    @abstractmethod
+    def total_report(self) -> Dict[str, Any]:
+        """Generate totals report."""
+        pass
 
 
 class ReportMixin:
@@ -49,9 +62,13 @@ class ReportMixin:
 
     def _total_value(self, df: "pd.DataFrame"):
         """Return the px total."""
-        return df["quantity"].sum()
+        return df["value"].sum()
 
-    def statistics(self) -> Dict[str, Any]:
+    def _count_rows(self, df: "pd.DataFrame"):
+        """Return the total number of elements in a Dataframe."""
+        return df.shape[0]
+
+    def stats_report(self) -> Dict[str, Any]:
         """Generate report."""
         if isinstance(self, BidReport):
             key = "bids"
@@ -70,15 +87,32 @@ class ReportMixin:
 
         return result
 
+    def total_report(self) -> Dict[str, Any]:
+        """Generate totals report."""
+        if isinstance(self, BidReport):
+            key = "bids"
+        else:
+            key = "asks"
 
-class BidReport(ReportMixin):
+        result = {
+            key: {
+                "count": self._count_rows(df=self._df),
+                "qty": self._total_qty(df=self._df),
+                "value": self._total_value(df=self._df),
+            }
+        }
+
+        return result
+
+
+class BidReport(ReportMixin, Strategy):
     def __init__(self, ticker: "Ticker") -> None:
         """Class constructor."""  # noqa: D401
         self._ticker = ticker
         self._df = self._load_orders(order_type=Order.OrderType.BID)
 
 
-class AskReport(ReportMixin):
+class AskReport(ReportMixin, Strategy):
     def __init__(self, ticker: "Ticker") -> None:
         """Class constructor."""  # noqa: D401
         self._ticker = ticker
@@ -100,25 +134,22 @@ class ReportGenerator:
     _ticker: "Ticker"
     _report_type: "Order.OrderType"
 
-    def __init__(self, ticker: "Ticker", type: "Order.OrderType") -> None:
+    def __init__(self, strategy: "Strategy") -> None:
         """Class constructor."""  # noqa: D401
-        self._ticker = ticker
-        self._report_type = type
+        self._strategy = strategy
 
     @property
-    def ticker(self) -> "Ticker":
-        return self._ticker
+    def strategy(self) -> "Strategy":
+        return self._strategy
 
-    def statistics_report(self) -> Dict[str, Any]:
+    def stats_report(self) -> Dict[str, Any]:
         """Create the report for Bid orders."""
-        report = factory_report(self._report_type, self.ticker)
-        data = report.statistics()
+        data = self.strategy.stats_report()
 
         return data
 
     def total_report(self) -> Dict[str, Any]:
         """Create the total report"""
-        report = factory_report(self._report_type, self.ticker)
-        data = report.statistics()
+        data = self.strategy.total_report()
 
         return data
