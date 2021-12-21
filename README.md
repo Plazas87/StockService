@@ -26,6 +26,10 @@ Python 3.8
 
     ``make createdb``
 
+* Remove the database and volume (Only the first time):
+
+    ``make removedb``
+
 * Run the initials migrations:
 
     ``make migrate``
@@ -57,11 +61,15 @@ There are two options for this:
 To use a docker container, make sure you have installed docker before execute the
 following command.
 
-`docker exec -it dataservice_db createdb -U postgres stock_service`
+`docker run -d --name stock_service_db \
+      -v stock_service_data:/var/lib/postgresql/data \
+      -p 5432:5432 \
+      -e POSTGRES_HOST_AUTH_METHOD=trust \
+      postgres:12`
 
 or if you have make installed:
 
-`make createdb` and after `make startdb` to start the database container.
+`make startdb` and after `make createdb` to create the database.
 
 To use a local PostgreSQL database, just configure a new database using '**stock_service**' as database
 name using the postgres default port.

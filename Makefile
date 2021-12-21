@@ -14,7 +14,7 @@ createsuperuser:
 .PHONY: deps
 deps:
 	pip install --upgrade pip
-	pip install -r requirements/local.txt
+	pip install -r requirements.txt
 
 # target: makemigrations - Create migration files
 .PHONY: makemigrations
@@ -51,7 +51,7 @@ setup:
 # target: start - Run server (Default)
 .PHONY: start
 start:
-	./manage.py runserver $(IFACE):$(PORT)
+	./manage.py runserver
 
 # target: startdb - Start the database container
 .PHONY: startdb
