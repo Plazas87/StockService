@@ -13,9 +13,9 @@ class BidsView(APIView):
         data = {"data": {}}
 
         try:
-            ticker = Ticker.objects.get(ticker_name=ticker)
+            ticker = Ticker.objects.get(name=ticker)
         except Ticker.DoesNotExist:
-            return Http404
+            return Response(data=data)
 
         strategy = factory_report(report_type=Order.OrderType.BID, ticker=ticker)
 
@@ -33,9 +33,9 @@ class AsksView(APIView):
         data = {"data": {}}
 
         try:
-            ticker = Ticker.objects.get(ticker_name=ticker)
+            ticker = Ticker.objects.get(name=ticker)
         except Ticker.DoesNotExist:
-            return Http404
+            return Response(data=data)
 
         strategy = factory_report(report_type=Order.OrderType.ASK, ticker=ticker)
 

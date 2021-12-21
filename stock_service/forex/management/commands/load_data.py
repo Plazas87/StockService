@@ -39,7 +39,7 @@ class Command(BaseCommand):
     def _load_data(self, data: Dict[str, Any]) -> None:
         """Load data into the data base."""
         orders = []
-        ticker = Ticker.objects.create(ticker_name=data["symbol"])
+        ticker = Ticker.objects.create(name=data["symbol"])
 
         for data_key in settings.DATA_KEYS:
             for order in data[data_key]:
