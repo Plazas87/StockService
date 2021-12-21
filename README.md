@@ -26,7 +26,7 @@ Python 3.8
 
     ``make createdb``
 
-* Remove the database and volume (Only the first time):
+* Remove the database and volume:
 
     ``make removedb``
 
