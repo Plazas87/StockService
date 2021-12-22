@@ -14,10 +14,6 @@ Python 3.8
 
     ``make deps``
 
-* Install pre-commit hooks:
-
-    ``make setup``
-
 * Start the database container:
 
     ``make startdb``
@@ -25,10 +21,6 @@ Python 3.8
 * Create the database (Only the first time):
 
     ``make createdb``
-
-* Remove the database and volume:
-
-    ``make removedb``
 
 * Run the initials migrations:
 
@@ -41,6 +33,14 @@ Python 3.8
 * Stop the database
 
     ``make stopdb``
+
+* Remove the database and volume:
+
+    ``make removedb``
+
+* Install pre-commit hooks (required to developed not to users) :
+
+    ``make setup``
 
 * Run test
 
