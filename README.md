@@ -93,6 +93,15 @@ or if you have make installed
 
 After that, load the data again.
 
+#### Check data
+In case you want to check your loaded data, you can use de Django Admin.
+Just create a superuser:
+
+`python manage.py createsuperuser` or `make createsuperuser`
+
+Run the application (see section _Run the application_) and then visit `localhost:8000/admin`,
+login in using your username and password. Now you can check your data.
+
 ### Run the application.
 Now that you have everything ready, run the application by executing:
 
